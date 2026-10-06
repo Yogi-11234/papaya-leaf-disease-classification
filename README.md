@@ -1,59 +1,121 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Papaya Leaf Disease Classification & AI Consultation
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Web-based system for classifying papaya leaf diseases using a custom Convolutional Neural Network (CNN) and providing AI-assisted consultation based on the classification result.
 
-## About Laravel
+This project was developed as an undergraduate thesis with a case study in **Desa Cibodas, Kabupaten Bandung Barat**.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Features
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+- Papaya leaf image classification
+- Image capture/upload from camera or device
+- Classification history
+- Model performance dashboard
+- AI chatbot consultation based on classification results
+- Responsive web interface
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## Dataset
 
-## Learning Laravel
+The dataset contains **422 original papaya leaf images** collected using a Samsung A05s camera.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+Five classification classes:
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+- Anthracnose
+- Bacterial Spot
+- Curl
+- Ring Spot
+- Healthy
 
-## Laravel Sponsors
+## Model
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+The system uses **PapayaLeafCNN**, a custom CNN designed from scratch without pre-trained weights.
 
-### Premium Partners
+Main characteristics:
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+- Input size: 224 × 224 pixels
+- 5 convolutional blocks
+- Residual connections
+- Global Average Pooling
+- Dropout
+- 420,389 trainable parameters
+- 5-Fold Stratified Group Cross Validation
 
-## Contributing
+### Training
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+- Optimizer: AdamW
+- Learning Rate: 0.001
+- Batch Size: 32
+- Label Smoothing: 0.05
+- ReduceLROnPlateau Scheduler
+- Early Stopping
+- Mixed Precision Training (AMP)
 
-## Code of Conduct
+## Results
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+Average 5-Fold Cross Validation results:
 
-## Security Vulnerabilities
+| Metric | Result |
+|---|---:|
+| Accuracy | 77.02% ± 2.69% |
+| Precision | 77.27% ± 2.94% |
+| Recall | 76.97% ± 2.31% |
+| F1-Score | 76.65% ± 2.48% |
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+Best performance was achieved on **Fold 5 with 80.95% accuracy**.
 
-## License
+## Technology Stack
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+**Machine Learning**
+- Python
+- PyTorch
+- Albumentations
+- scikit-learn
+
+**Web Application**
+- Laravel 11
+- PHP 8.2
+- Tailwind CSS
+- PostgreSQL
+
+**Inference & AI**
+- FastAPI
+- Guzzle HTTP
+- Groq API
+- Llama 3.3 70B
+
+## Project Structure
+
+```text
+├── app/
+├── database/
+├── resources/
+├── routes/
+├── public/
+├── fastapi_service/
+├── tests/
+├── composer.json
+└── package.json
+```
+
+## Installation
+
+```bash
+git clone https://github.com/Yogi-11234/papaya-leaf-disease-classification.git
+cd papaya-leaf-disease-classification
+
+composer install
+npm install
+
+cp .env.example .env
+php artisan key:generate
+
+php artisan migrate
+php artisan serve
+```
+
+Run the FastAPI inference service separately according to the configuration in `fastapi_service`.
+
+## Research
+
+This project is part of an undergraduate thesis focusing on the implementation of a custom CNN for papaya leaf disease classification using a locally collected dataset.
+
+For research details, methodology, architecture, and evaluation results, see the thesis documentation.
